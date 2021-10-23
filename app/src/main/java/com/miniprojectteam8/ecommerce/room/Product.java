@@ -28,7 +28,7 @@ public class Product {
     @ColumnInfo(name = "rate")
     private String rate;
 
-    public Product (int id, String title, String price, String description, String category, String imageUrl, String rate, int rateCount, boolean isInWishlist) {
+    public Product(int id, String title, String price, String description, String category, String imageUrl, String rate, int rateCount, boolean isInWishlist) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -88,7 +88,9 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public String getRate() {return rate;}
+    public String getRate() {
+        return rate;
+    }
 
     public void setRate(String rate) {
         this.rate = rate;

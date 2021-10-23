@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.miniprojectteam8.ecommerce.api.productRetrofit.ProductRetrofit;
 import com.miniprojectteam8.ecommerce.api.productRetrofit.ProductRetrofitInstance;
@@ -16,8 +17,9 @@ import retrofit2.Response;
 
 public class ProductRepository {
     private final ProductDAO productDAO;
+    private MutableLiveData<List<Product>> products = new MutableLiveData<>();
 
-    public ProductRepository(Application application){
+    public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getDatabase(application);
         productDAO = database.productDao();
     }
@@ -56,12 +58,19 @@ public class ProductRepository {
                 });
     }
 
-    public LiveData<List<Product>> getAllProducts(){
-        return productDAO.getAllProducts();
+    public LiveData<List<Product>> getAllProducts() {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getAllProducts()));
+        return products;
     }
 
-    public LiveData<List<Product>> getProductsByCategory(String category){
-        return productDAO.getProductsByCategory(category);
+    public LiveData<List<Product>> getProductsByCategory(String category) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsByCategory(category)));
+        return products;
+    }
+
+    public LiveData<List<Product>> getProductsQueryTitle(String query) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsQueryTitle(query.toLowerCase())));
+        return products;
     }
 
     public void addProductToWishlist(int id) {

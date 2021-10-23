@@ -18,15 +18,19 @@ public class ProductViewModel extends AndroidViewModel {
         productRepository.insertProductsToDatabase();
     }
 
-    public void setProductsToAllProducts(){
+    public void setProductsToAllProducts() {
         products = productRepository.getAllProducts();
     }
 
-    public void setProductsByCategory(String category){
+    public void setProductsByCategory(String category) {
         products = productRepository.getProductsByCategory(category);
     }
 
-    public LiveData<List<Product>> getProducts(){
+    public void setProductsQueryTitle(String query) {
+        products = productRepository.getProductsQueryTitle(query);
+    }
+
+    public LiveData<List<Product>> getProducts() {
         return products;
     }
 }

@@ -1,6 +1,7 @@
 package com.miniprojectteam8.ecommerce.api.productRetrofit;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
