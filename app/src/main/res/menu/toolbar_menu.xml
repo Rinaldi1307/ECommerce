@@ -2,8 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/logout"
         android:title="Log Out"
-        android:icon="@android:drawable/ic_lock_power_off"
         app:showAsAction="ifRoom"/>
 </menu>

@@ -64,6 +64,12 @@ import com.google.gson.annotations.SerializedName;
         private String companyId;
         private final static long serialVersionUID = -290383013301283079L;
 
+        public Data(String id, String fullName, String email){
+            this.id = id;
+            this.fullName = fullName;
+            this.email = email;
+        }
+
         public String getId() {
             return id;
         }
