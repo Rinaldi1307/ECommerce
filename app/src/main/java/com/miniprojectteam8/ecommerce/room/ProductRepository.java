@@ -65,6 +65,11 @@ public class ProductRepository {
         return products;
     }
 
+    public LiveData<List<Product>> getProductsInWishlist() {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsInWishlist(true)));
+        return products;
+    }
+
     public LiveData<List<Product>> getProductsByCategory(String category) {
         ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsByCategory(category)));
         return products;
@@ -79,6 +84,7 @@ public class ProductRepository {
         ProductDatabase.databaseWriteExecutor.execute(() -> product.postValue(productDAO.getProductById(productId)));
         return product;
     }
+
 
     public void toogleIsInWishlist(int productId) {
         ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.toggleIsInWishlist(productId));

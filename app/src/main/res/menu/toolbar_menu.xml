@@ -8,11 +8,18 @@
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView"/>
     <item
+        android:id="@+id/wishlist"
+        android:title="Wishlist"
+        android:icon="@drawable/image_heart_full_png"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/profile"
         android:title="Profile"
+        android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/logout"
         android:title="Log Out"
+        android:icon="@android:drawable/ic_lock_power_off"
         app:showAsAction="ifRoom"/>
 </menu>

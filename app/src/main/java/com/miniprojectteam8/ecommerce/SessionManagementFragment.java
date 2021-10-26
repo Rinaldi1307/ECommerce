@@ -132,7 +132,7 @@ public class SessionManagementFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startAndStoreSession(Data data, String token){
         SessionManagerUtil.getInstance().storeUserToken(requireActivity(), data, token);
-        SessionManagerUtil.getInstance().startUserSession(requireActivity(), 30);
+        SessionManagerUtil.getInstance().startUserSession(requireActivity(), 3600);
     }
 
     private void startMainActivity(){
