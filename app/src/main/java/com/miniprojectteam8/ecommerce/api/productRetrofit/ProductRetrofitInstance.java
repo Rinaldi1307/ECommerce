@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ProductRetrofitInstance {
     private final ProductEndPointInterface API;
 
-    public ProductRetrofitInstance(){
+    public ProductRetrofitInstance() {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
@@ -21,7 +21,7 @@ public class ProductRetrofitInstance {
         API = retrofit.create(ProductEndPointInterface.class);
     }
 
-    public ProductEndPointInterface getAPI(){
+    public ProductEndPointInterface getAPI() {
         return API;
     }
 

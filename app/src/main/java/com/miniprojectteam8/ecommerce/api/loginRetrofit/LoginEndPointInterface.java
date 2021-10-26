@@ -1,9 +1,5 @@
 package com.miniprojectteam8.ecommerce.api.loginRetrofit;
 
-import com.miniprojectteam8.ecommerce.api.productRetrofit.ProductRetrofit;
-
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

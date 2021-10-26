@@ -24,7 +24,6 @@ import com.miniprojectteam8.ecommerce.api.loginRetrofit.Data;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.LoginResponse;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.LoginRetrofitInstance;
 
-import java.util.Base64;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

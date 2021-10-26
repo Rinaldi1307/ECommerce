@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.miniprojectteam8.ecommerce.api.productRetrofit.ProductRetrofit;
 import com.miniprojectteam8.ecommerce.api.productRetrofit.ProductRetrofitInstance;
@@ -17,7 +18,10 @@ import retrofit2.Response;
 public class ProductRepository {
     private final ProductDAO productDAO;
 
-    public ProductRepository(Application application){
+    private final MutableLiveData<List<Product>> products = new MutableLiveData<>();
+    private final MutableLiveData<Product> product = new MutableLiveData<>();
+
+    public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getDatabase(application);
         productDAO = database.productDao();
     }
@@ -56,19 +60,27 @@ public class ProductRepository {
                 });
     }
 
-    public LiveData<List<Product>> getAllProducts(){
-        return productDAO.getAllProducts();
+    public LiveData<List<Product>> getAllProducts() {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getAllProducts()));
+        return products;
     }
 
-    public LiveData<List<Product>> getProductsByCategory(String category){
-        return productDAO.getProductsByCategory(category);
+    public LiveData<List<Product>> getProductsByCategory(String category) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsByCategory(category)));
+        return products;
     }
 
-    public void addProductToWishlist(int id) {
-        ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.addProductToWishlist(id));
+    public LiveData<List<Product>> getProductsQueryTitle(String query) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsQueryTitle(query.toLowerCase())));
+        return products;
     }
 
-    public void removeProductFromWishlist(int id) {
-        ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.removeProductFromWishlist(id));
+    public LiveData<Product> getProductById(int productId) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> product.postValue(productDAO.getProductById(productId)));
+        return product;
+    }
+
+    public void toogleIsInWishlist(int productId) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.toggleIsInWishlist(productId));
     }
 }

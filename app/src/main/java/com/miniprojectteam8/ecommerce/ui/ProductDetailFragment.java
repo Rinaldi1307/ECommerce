@@ -1,66 +1,124 @@
 package com.miniprojectteam8.ecommerce.ui;
 
+import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.miniprojectteam8.ecommerce.R;
+import com.miniprojectteam8.ecommerce.room.Product;
+import com.miniprojectteam8.ecommerce.room.ProductRepository;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProductDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ProductDetailFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private final Product currentProduct;
+    private boolean isInWishlist;
+    private final ProductRepository productRepository;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final ExecutorService networkExecutor = Executors.newFixedThreadPool(4);
+    private final Executor mainThread = new Executor() {
+        private final Handler handler = new Handler(Looper.getMainLooper());
 
-    public ProductDetailFragment() {
-        // Required empty public constructor
-    }
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
+    };
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProductDetailFragment newInstance(String param1, String param2) {
-        ProductDetailFragment fragment = new ProductDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+
+    public ProductDetailFragment(Product product, Application application) {
+        currentProduct = product;
+        isInWishlist = product.getIsInWishlist();
+
+        productRepository = new ProductRepository(application);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.search);
+        if (item != null) item.setVisible(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detail, container, false);
+        View view = inflater.inflate(R.layout.product_detail_fragment, container, false);
+
+        ImageView ivImage = view.findViewById(R.id.product_detail_image_view_image);
+        networkExecutor.execute(() -> {
+            try {
+                InputStream is = new URL(currentProduct.getImageUrl()).openStream();
+                Bitmap image = BitmapFactory.decodeStream(is);
+                mainThread.execute(() -> ivImage.setImageBitmap(image));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        TextView tvTitle = view.findViewById(R.id.product_detail_text_view_title);
+        tvTitle.setText(currentProduct.getTitle());
+        tvTitle.setTypeface(null, Typeface.BOLD);
+
+        TextView tvDescription = view.findViewById(R.id.product_detail_text_view_description);
+        tvDescription.setText(currentProduct.getDescription());
+
+        TextView tvPrice = view.findViewById(R.id.product_detail_text_view_price);
+        tvPrice.setText("$ ".concat(currentProduct.getPrice()));
+
+
+        Drawable wishlistIconAddDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_heart_empty_png, null);
+        Drawable wishlistIconRemoveDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_heart_full_png, null);
+
+        FloatingActionButton wishlistFab = view.findViewById(R.id.product_detail_wishlist_fab);
+        if (isInWishlist) wishlistFab.setImageDrawable(wishlistIconRemoveDrawable);
+        else wishlistFab.setImageDrawable(wishlistIconAddDrawable);
+        wishlistFab.setOnClickListener(v -> {
+            productRepository.toogleIsInWishlist(currentProduct.getId());
+
+            isInWishlist = !isInWishlist;
+            if (isInWishlist) {
+                wishlistFab.setImageDrawable(wishlistIconRemoveDrawable);
+                Toast.makeText(getContext(), "Added to Wishlist", Toast.LENGTH_SHORT).show();
+            } else {
+                wishlistFab.setImageDrawable(wishlistIconAddDrawable);
+                Toast.makeText(getContext(), "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button buyButton = view.findViewById(R.id.product_detail_buy_button);
+        buyButton.setOnClickListener(v -> Toast.makeText(getContext(), "onClickBuyButton", Toast.LENGTH_SHORT).show());
+
+        return view;
     }
 }

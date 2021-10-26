@@ -1,10 +1,13 @@
-package com.miniprojectteam8.ecommerce.room;
+package com.miniprojectteam8.ecommerce.ui.productCatalog;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.miniprojectteam8.ecommerce.room.Product;
+import com.miniprojectteam8.ecommerce.room.ProductRepository;
 
 import java.util.List;
 
@@ -18,15 +21,19 @@ public class ProductViewModel extends AndroidViewModel {
         productRepository.insertProductsToDatabase();
     }
 
-    public void setProductsToAllProducts(){
+    public void setProductsToAllProducts() {
         products = productRepository.getAllProducts();
     }
 
-    public void setProductsByCategory(String category){
+    public void setProductsByCategory(String category) {
         products = productRepository.getProductsByCategory(category);
     }
 
-    public LiveData<List<Product>> getProducts(){
+    public void setProductsQueryTitle(String query) {
+        products = productRepository.getProductsQueryTitle(query);
+    }
+
+    public LiveData<List<Product>> getProducts() {
         return products;
     }
 }

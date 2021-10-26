@@ -1,6 +1,5 @@
 package com.miniprojectteam8.ecommerce.room;
 
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -28,7 +27,13 @@ public class Product {
     @ColumnInfo(name = "rate")
     private String rate;
 
-    public Product (int id, String title, String price, String description, String category, String imageUrl, String rate, int rateCount, boolean isInWishlist) {
+    @ColumnInfo(name = "rateCount")
+    private int rateCount;
+
+    @ColumnInfo(name = "isInWishlist")
+    private boolean isInWishlist;
+
+    public Product(int id, String title, String price, String description, String category, String imageUrl, String rate, int rateCount, boolean isInWishlist) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -88,7 +93,9 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public String getRate() {return rate;}
+    public String getRate() {
+        return rate;
+    }
 
     public void setRate(String rate) {
         this.rate = rate;
@@ -102,17 +109,11 @@ public class Product {
         this.rateCount = rateCount;
     }
 
-    public boolean isInWishlist() {
+    public boolean getIsInWishlist() {
         return isInWishlist;
     }
 
-    public void setInWishlist(boolean inWishlist) {
-        isInWishlist = inWishlist;
+    public void setIsInWishlist(boolean isInWishlist) {
+        this.isInWishlist = isInWishlist;
     }
-
-    @ColumnInfo(name = "rateCount")
-    private int rateCount;
-
-    @ColumnInfo(name = "isInWishlist")
-    private boolean isInWishlist;
 }

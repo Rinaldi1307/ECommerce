@@ -1,13 +1,14 @@
 package com.miniprojectteam8.ecommerce.api.loginRetrofit;
 
-        import java.io.Serializable;
-        import javax.annotation.Generated;
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+
+import javax.annotation.Generated;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class LoginResponse implements Serializable
-{
+public class LoginResponse implements Serializable {
 
     @SerializedName("status")
     @Expose
