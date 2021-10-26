@@ -3,6 +3,8 @@ package com.miniprojectteam8.ecommerce;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.miniprojectteam8.ecommerce.api.loginRetrofit.Data;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,11 +44,23 @@ public class SessionManagerUtil {
                 .getLong(SESSION_EXPIRY_TIME, 0);
     }
 
-    public void storeUserToken(Context context, String token){
+    public void storeUserToken(Context context, Data data, String token){
         SharedPreferences.Editor editor =
                 context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE).edit();
+        editor.putString("id", data.getId());
+        editor.putString("full_name", data.getFullName());
+        editor.putString("email", data.getEmail());
         editor.putString(SESSION_TOKEN, token);
         editor.apply();
+    }
+
+    public Data getData(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
+        return new Data(
+                sharedPreferences.getString("id", null),
+                sharedPreferences.getString("full_name", null),
+                sharedPreferences.getString("email", null)
+        );
     }
 
     public String getUserToken(Context context){

@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.miniprojectteam8.ecommerce.api.loginRetrofit.Data;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.LoginResponse;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.LoginRetrofitInstance;
 
@@ -95,7 +96,7 @@ public class SessionManagementFragment extends Fragment {
                 if(response.body() != null){
                     LoginResponse loginResponse = response.body();
                     if(loginResponse.getStatus()){
-                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                        login(loginResponse.getData(), loginResponse.getToken());
                     }
                 }else{
                     Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
@@ -110,7 +111,7 @@ public class SessionManagementFragment extends Fragment {
 
     }
 
-    private void login(){
+    private void login(Data data, String token){
         pb.setVisibility(View.VISIBLE);
         backgroundThread.execute(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -121,7 +122,7 @@ public class SessionManagementFragment extends Fragment {
                     @Override
                     public void run() {
                         pb.setVisibility(View.INVISIBLE);
-                        startAndStoreSession();
+                        startAndStoreSession(data, token);
                         startMainActivity();
                     }
                 });
@@ -129,20 +130,9 @@ public class SessionManagementFragment extends Fragment {
         });
     }
 
-    private String generateToken(String username, String password){
-        String feeds = username+":"+password;
-        String token = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            token = Base64.getEncoder().encodeToString(feeds.getBytes());
-        } else {
-            token = feeds;
-        }
-        return token;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void startAndStoreSession(){
-        SessionManagerUtil.getInstance().storeUserToken(requireActivity(), generateToken(username, password));
+    private void startAndStoreSession(Data data, String token){
+        SessionManagerUtil.getInstance().storeUserToken(requireActivity(), data, token);
         SessionManagerUtil.getInstance().startUserSession(requireActivity(), 30);
     }
 

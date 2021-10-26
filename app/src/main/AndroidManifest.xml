@@ -16,6 +16,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name="com.miniprojectteam8.ecommerce.ProfileActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name="com.miniprojectteam8.ecommerce.MainActivity"
             android:exported="true">
             <intent-filter>
