@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.miniprojectteam8.ecommerce.ui.productCatalog.ProductCatalogFragment;
+import com.miniprojectteam8.ecommerce.ui.productCatalog.WishlistCatalogFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -42,6 +43,10 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        } else if (id == R.id.wishlist) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, WishlistCatalogFragment.newInstance())
+                    .commitNow();
         }
         return super.onOptionsItemSelected(item);
     }

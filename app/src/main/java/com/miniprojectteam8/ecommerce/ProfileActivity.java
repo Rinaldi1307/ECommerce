@@ -1,5 +1,6 @@
 package com.miniprojectteam8.ecommerce;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -18,5 +19,13 @@ public class ProfileActivity extends BaseActivity{
         Data data = SessionManagerUtil.getInstance().getData(this);
         profileText.setText("Hello " + data.getFullName() + " " + data.getEmail());
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

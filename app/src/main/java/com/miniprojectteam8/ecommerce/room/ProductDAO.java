@@ -12,6 +12,9 @@ public interface ProductDAO {
     @Query("SELECT * FROM product")
     List<Product> getAllProducts();
 
+    @Query("SELECT * FROM product WHERE isInWishlist = :isInWishlist")
+    List<Product> getProductsInWishlist(boolean isInWishlist);
+
     @Query("SELECT * FROM product WHERE category = :category")
     List<Product> getProductsByCategory(String category);
 
