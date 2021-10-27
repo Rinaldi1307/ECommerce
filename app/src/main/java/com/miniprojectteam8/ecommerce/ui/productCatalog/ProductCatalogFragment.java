@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miniprojectteam8.ecommerce.R;
-import com.miniprojectteam8.ecommerce.ui.ProductDetailFragment;
+import com.miniprojectteam8.ecommerce.ui.productDetail.ProductDetailFragment;
 
 public class ProductCatalogFragment extends Fragment {
 

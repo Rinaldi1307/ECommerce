@@ -1,4 +1,4 @@
-package com.miniprojectteam8.ecommerce.ui;
+package com.miniprojectteam8.ecommerce.ui.productDetail;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -6,10 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -21,6 +17,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.miniprojectteam8.ecommerce.R;
@@ -42,8 +42,7 @@ public class ProductDetailFragment extends Fragment {
 
     private final ExecutorService networkExecutor = Executors.newFixedThreadPool(4);
     private final Executor mainThread = new Executor() {
-        private final Handler handler = new Handler(Looper.getMainLooper());
-
+        private Handler handler = new Handler(Looper.getMainLooper());
         @Override
         public void execute(Runnable command) {
             handler.post(command);
@@ -66,8 +65,8 @@ public class ProductDetailFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.search);
-        if (item != null) item.setVisible(false);
+        MenuItem item=menu.findItem(R.id.search);
+        if(item!=null) item.setVisible(false);
     }
 
     @Override
@@ -94,8 +93,9 @@ public class ProductDetailFragment extends Fragment {
         tvDescription.setText(currentProduct.getDescription());
 
         TextView tvPrice = view.findViewById(R.id.product_detail_text_view_price);
-        tvPrice.setText("$ ".concat(currentProduct.getPrice()));
+        tvPrice.setText("$ " + currentProduct.getPrice());
 
+        ResourcesCompat.getDrawable(getResources(), R.drawable.image_heart_empty_png, null);
 
         Drawable wishlistIconAddDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_heart_empty_png, null);
         Drawable wishlistIconRemoveDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_heart_full_png, null);
@@ -109,15 +109,19 @@ public class ProductDetailFragment extends Fragment {
             isInWishlist = !isInWishlist;
             if (isInWishlist) {
                 wishlistFab.setImageDrawable(wishlistIconRemoveDrawable);
-                Toast.makeText(getContext(), "Added to Wishlist", Toast.LENGTH_SHORT).show();
-            } else {
+                Toast.makeText(getContext(),"Added to Wishlist",Toast.LENGTH_SHORT).show();
+            }
+            else {
                 wishlistFab.setImageDrawable(wishlistIconAddDrawable);
-                Toast.makeText(getContext(), "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Removed from Wishlist",Toast.LENGTH_SHORT).show();
             }
         });
 
         Button buyButton = view.findViewById(R.id.product_detail_buy_button);
-        buyButton.setOnClickListener(v -> Toast.makeText(getContext(), "onClickBuyButton", Toast.LENGTH_SHORT).show());
+        buyButton.setOnClickListener(v -> {
+            DialogFragment dialogFragment = new ProductDetailOrderDialog(getParentFragmentManager(), currentProduct);
+            dialogFragment.show(getChildFragmentManager(), null);
+        });
 
         return view;
     }
