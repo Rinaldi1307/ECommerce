@@ -90,8 +90,7 @@ public class ProductRepository {
         return product;
     }
 
-
-    public void toogleIsInWishlist(int productId) {
+    public void toggleIsInWishlist(int productId) {
         ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.toggleIsInWishlist(productId));
     }
 
@@ -101,5 +100,9 @@ public class ProductRepository {
             products.postValue(productDAO.getProductsInWishlist(true));
         });
         return products;
+    }
+  
+    public void deleteAllProducts() {
+        ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.deleteAllProducts());
     }
 }

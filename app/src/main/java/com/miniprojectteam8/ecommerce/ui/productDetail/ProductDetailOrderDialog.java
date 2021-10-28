@@ -36,12 +36,14 @@ import java.util.concurrent.Executors;
 public class ProductDetailOrderDialog extends DialogFragment {
     private final FragmentManager fragmentManager;
     private final Product currentProduct;
-    private TextView tvQuantity;
-    private TextView tvTotal;
+    private TextView tvQuantityValue;
+    private TextView tvTotalValue;
     private Button btnMinus;
     private Button btnPlus;
 
-    int quantity = 1;
+    private int quantity = 1;
+    private final int minQuantity = 1;
+    private final int maxQuantity = 10;
 
     private final ExecutorService networkExecutor = Executors.newFixedThreadPool(4);
     private final Executor mainThread = new Executor() {
@@ -79,34 +81,43 @@ public class ProductDetailOrderDialog extends DialogFragment {
         TextView tvTitle = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_title);
         tvTitle.setText(currentProduct.getTitle());
 
-        TextView tvPrice = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_price_value);
-        tvPrice.setText("$ ".concat(currentProduct.getPrice()));
+        TextView tvPriceValue = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_price_value);
+        tvPriceValue.setText("$ ".concat(currentProduct.getPrice()));
 
-        tvQuantity = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_quantity_value);
-        tvQuantity.setText(String.valueOf(quantity));
+        TextView tvQuantity =  dialogView.findViewById(R.id.product_detail_order_dialog_text_view_quantity);
+        tvQuantity.setText(
+                "Quantity ("
+                        .concat(String.valueOf(minQuantity))
+                        .concat("-")
+                        .concat(String.valueOf(maxQuantity))
+                        .concat(")")
+        );
 
-        tvTotal = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_total_value);
-        tvTotal.setText("$ ".concat(calculateTotal()));
+        tvQuantityValue = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_quantity_value);
+        tvQuantityValue.setText(String.valueOf(quantity));
+
+        tvTotalValue = dialogView.findViewById(R.id.product_detail_order_dialog_text_view_total_value);
+        tvTotalValue.setText("$ ".concat(calculateTotal()));
 
         btnMinus = dialogView.findViewById(R.id.product_detail_order_dialog_button_minus);
         btnMinus.setEnabled(false);
         btnMinus.setOnClickListener(v -> {
             quantity--;
-            tvQuantity.setText(String.valueOf(quantity));
-            tvTotal.setText("$ ".concat(calculateTotal()));
+            tvQuantityValue.setText(String.valueOf(quantity));
+            tvTotalValue.setText("$ ".concat(calculateTotal()));
 
-            if (quantity < 10) btnPlus.setEnabled(true);
-            if (quantity == 1) btnMinus.setEnabled(false);
+            if (quantity < maxQuantity) btnPlus.setEnabled(true);
+            if (quantity == minQuantity) btnMinus.setEnabled(false);
         });
 
         btnPlus = dialogView.findViewById(R.id.product_detail_order_dialog_button_plus);
         btnPlus.setOnClickListener(v -> {
             quantity++;
-            tvQuantity.setText(String.valueOf(quantity));
-            tvTotal.setText("$ ".concat(calculateTotal()));
+            tvQuantityValue.setText(String.valueOf(quantity));
+            tvTotalValue.setText("$ ".concat(calculateTotal()));
 
-            if (quantity > 1) btnMinus.setEnabled(true);
-            if (quantity == 10) btnPlus.setEnabled(false);
+            if (quantity > minQuantity) btnMinus.setEnabled(true);
+            if (quantity == maxQuantity) btnPlus.setEnabled(false);
         });
 
         dialog.setView(dialogView);

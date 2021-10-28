@@ -40,12 +40,12 @@ public class ProductViewModel extends AndroidViewModel {
     public void setProductsInWishlist() {
         products = productRepository.getProductsInWishlist();
     }
-
-    public LiveData<List<Product>> getProducts() {
-        return products;
-    }
-
+  
     public void deleteProductFromWishlist(Product product) {
         products = productRepository.deleteProductFromWishlist(product.getId());
+    }
+  
+    public LiveData<List<Product>> getProducts() {
+        return products;
     }
 }
