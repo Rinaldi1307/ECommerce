@@ -80,6 +80,11 @@ public class ProductRepository {
         return products;
     }
 
+    public LiveData<List<Product>> getProductsQueryTitleInWishlist(String query) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> products.postValue(productDAO.getProductsQueryTitleInWishlist(query.toLowerCase(), true)));
+        return products;
+    }
+
     public LiveData<Product> getProductById(int productId) {
         ProductDatabase.databaseWriteExecutor.execute(() -> product.postValue(productDAO.getProductById(productId)));
         return product;

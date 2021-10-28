@@ -73,4 +73,38 @@ public class WishlistCatalogFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (getActivity() != null) {
+            SearchManager sm = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+            sv.setSearchableInfo(sm.getSearchableInfo(getActivity().getComponentName()));
+            sv.setIconifiedByDefault(true);
+            sv.setMaxWidth(Integer.MAX_VALUE);
+            sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    wishlistViewModel.setProductsQueryTitleInWishlist(s);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (TextUtils.isEmpty(s)) {
+                        wishlistViewModel.setProductsInWishlist();
+                        return true;
+                    } else {
+                        wishlistViewModel.setProductsQueryTitleInWishlist(s);
+                        return false;
+                    }
+                }
+            });
+            sv.setOnCloseListener(() -> {
+                wishlistViewModel.setProductsInWishlist();
+                return false;
+            });
+        }
+    }
 }

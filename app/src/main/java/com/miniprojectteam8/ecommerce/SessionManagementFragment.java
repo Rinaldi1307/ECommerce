@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.Data;
 import com.miniprojectteam8.ecommerce.api.loginRetrofit.LoginResponse;
@@ -66,28 +67,22 @@ public class SessionManagementFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validate();
+                validate(v);
             }
         });
         return rootView;
     }
 
-    private void validate(){
+    private void validate(View v){
 
         username = textInputLayoutUsername.getEditText().getText().toString();
         password = textInputLayoutPassword.getEditText().getText().toString();
 
         if (TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
-            Toast.makeText(getActivity(), "Username dan password tidak boleh kosong!!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(v, "Username dan password tidak boleh kosong", Snackbar.LENGTH_LONG).show();
             return;
         }
 
-//        if (username.equalsIgnoreCase("user") && password.equalsIgnoreCase("pass")) {
-//            login();
-//        } else {
-//            Toast.makeText(getActivity(), "Username dan password tidak cocok!!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
         LoginRetrofitInstance loginRetrofitInstance = new LoginRetrofitInstance();
         loginRetrofitInstance.getAPI().getLoginResponse(username, password).enqueue(new Callback<LoginResponse>() {
             @Override
@@ -98,7 +93,7 @@ public class SessionManagementFragment extends Fragment {
                         login(loginResponse.getData(), loginResponse.getToken());
                     }
                 }else{
-                    Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, "User tidak terdaftar", Snackbar.LENGTH_LONG).show();
                 }
             }
 
