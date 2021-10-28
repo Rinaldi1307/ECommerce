@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.miniprojectteam8.ecommerce.room.ProductRepository;
 import com.miniprojectteam8.ecommerce.ui.productCatalog.ProductCatalogFragment;
 import com.miniprojectteam8.ecommerce.ui.productCatalog.WishlistCatalogFragment;
 
@@ -36,6 +37,8 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == R.id.logout) {
             SessionManagerUtil.getInstance().endUserSession(MainActivity.this);
+            ProductRepository productRepository = new ProductRepository(getApplication());
+            productRepository.deleteAllProducts();
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

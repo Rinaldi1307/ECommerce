@@ -29,5 +29,8 @@ public interface ProductDAO {
 
     @Query("UPDATE product SET isInWishlist = NOT isInWishlist WHERE id = :productId")
     void toggleIsInWishlist(int productId);
+
+    @Query("DELETE FROM product")
+    void deleteAllProducts();
 }
 

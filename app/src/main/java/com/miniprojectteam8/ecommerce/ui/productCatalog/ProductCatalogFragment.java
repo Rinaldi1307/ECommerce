@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,8 @@ public class ProductCatalogFragment extends Fragment {
 
     private ProductViewModel productViewModel;
     private ProductCatalogAdapter productCatalogAdapter;
+
+    private TextView tvNotFound;
 
     public static ProductCatalogFragment newInstance() {
         return new ProductCatalogFragment();
@@ -55,6 +58,8 @@ public class ProductCatalogFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.productCatalogRecyclerView);
         productCatalogAdapter = new ProductCatalogAdapter(productClickableCallback);
 
+        tvNotFound = view.findViewById(R.id.productCatalogTextViewNotFound);
+
         //Set product pada catalog ke semua product
         productViewModel.setProductsToAllProducts();
 
@@ -69,9 +74,10 @@ public class ProductCatalogFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         productViewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            if (products != null) {
-                productCatalogAdapter.submitList(products);
-            }
+            tvNotFound.setVisibility(View.INVISIBLE);
+            if (products == null || products.size() == 0) tvNotFound.setVisibility(View.VISIBLE);
+
+            productCatalogAdapter.submitList(products);
         });
     }
 

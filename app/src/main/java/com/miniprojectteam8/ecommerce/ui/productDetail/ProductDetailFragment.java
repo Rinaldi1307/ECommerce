@@ -104,7 +104,7 @@ public class ProductDetailFragment extends Fragment {
         if (isInWishlist) wishlistFab.setImageDrawable(wishlistIconRemoveDrawable);
         else wishlistFab.setImageDrawable(wishlistIconAddDrawable);
         wishlistFab.setOnClickListener(v -> {
-            productRepository.toogleIsInWishlist(currentProduct.getId());
+            productRepository.toggleIsInWishlist(currentProduct.getId());
 
             isInWishlist = !isInWishlist;
             if (isInWishlist) {
