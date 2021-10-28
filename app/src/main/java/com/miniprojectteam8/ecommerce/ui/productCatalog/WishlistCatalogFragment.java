@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,8 @@ import com.miniprojectteam8.ecommerce.ui.productDetail.ProductDetailFragment;
 public class WishlistCatalogFragment extends Fragment {
     private ProductViewModel wishlistViewModel;
     private WishlistCatalogAdapter wishlistCatalogAdapter;
+
+    private TextView tvNotFound;
 
     public static WishlistCatalogFragment newInstance() {
         return new WishlistCatalogFragment();
@@ -87,6 +90,8 @@ public class WishlistCatalogFragment extends Fragment {
                              Bundle savedInstanceState) {
         View wishlistView = inflater.inflate(R.layout.wishlist_catalog_fragment, container, false);
 
+        tvNotFound = wishlistView.findViewById(R.id.wishlistCatalogTextViewNotFound);
+
         //Initiate RecyclerView dan productCatalogAdapter
         RecyclerView wishlistRecyclerView = (RecyclerView) wishlistView.findViewById(R.id.wishlistCatalogRecyclerView);
         wishlistCatalogAdapter = new WishlistCatalogAdapter(wishlistClickableCallback, removeWishlistClickableCallback);
@@ -105,9 +110,10 @@ public class WishlistCatalogFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         wishlistViewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            if (products != null) {
-                wishlistCatalogAdapter.submitList(products);
-            }
+            tvNotFound.setVisibility(View.INVISIBLE);
+            if (products == null || products.size() == 0) tvNotFound.setVisibility(View.VISIBLE);
+
+            wishlistCatalogAdapter.submitList(products);
         });
     }
 

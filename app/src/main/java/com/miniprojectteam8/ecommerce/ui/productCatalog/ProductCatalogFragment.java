@@ -54,11 +54,11 @@ public class ProductCatalogFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_catalog_fragment, container, false);
 
+        tvNotFound = view.findViewById(R.id.productCatalogTextViewNotFound);
+
         //Initiate RecyclerView dan productCatalogAdapter
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.productCatalogRecyclerView);
         productCatalogAdapter = new ProductCatalogAdapter(productClickableCallback);
-
-        tvNotFound = view.findViewById(R.id.productCatalogTextViewNotFound);
 
         //Set product pada catalog ke semua product
         productViewModel.setProductsToAllProducts();
