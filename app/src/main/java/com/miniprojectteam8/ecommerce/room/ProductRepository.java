@@ -94,4 +94,12 @@ public class ProductRepository {
     public void toogleIsInWishlist(int productId) {
         ProductDatabase.databaseWriteExecutor.execute(() -> productDAO.toggleIsInWishlist(productId));
     }
+
+    public LiveData<List<Product>> deleteProductFromWishlist(int productId) {
+        ProductDatabase.databaseWriteExecutor.execute(() -> {
+            productDAO.toggleIsInWishlist(productId);
+            products.postValue(productDAO.getProductsInWishlist(true));
+        });
+        return products;
+    }
 }
