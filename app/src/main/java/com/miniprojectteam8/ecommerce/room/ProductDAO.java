@@ -21,6 +21,9 @@ public interface ProductDAO {
     @Query("SELECT * FROM product WHERE lower(title) like '%' || :query || '%'")
     List<Product> getProductsQueryTitle(String query);
 
+    @Query("SELECT * FROM product WHERE lower(title) like '%' || :query || '%' AND isInWishlist = :isInWishlist")
+    List<Product> getProductsQueryTitleInWishlist(String query, boolean isInWishlist);
+
     @Query("SELECT * FROM product WHERE id = :id LIMIT 1")
     Product getProductById(int id);
 

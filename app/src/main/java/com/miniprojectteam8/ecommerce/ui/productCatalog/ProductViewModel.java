@@ -33,14 +33,18 @@ public class ProductViewModel extends AndroidViewModel {
         products = productRepository.getProductsQueryTitle(query);
     }
 
+    public void setProductsQueryTitleInWishlist(String query) {
+        products = productRepository.getProductsQueryTitleInWishlist(query);
+    }
+
     public void setProductsInWishlist() {
         products = productRepository.getProductsInWishlist();
     }
-
+  
     public void deleteProductFromWishlist(Product product) {
         products = productRepository.deleteProductFromWishlist(product.getId());
     }
-
+  
     public LiveData<List<Product>> getProducts() {
         return products;
     }

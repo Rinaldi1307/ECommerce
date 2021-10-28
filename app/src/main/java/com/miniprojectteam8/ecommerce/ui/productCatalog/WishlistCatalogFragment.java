@@ -1,7 +1,9 @@
 package com.miniprojectteam8.ecommerce.ui.productCatalog;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +26,7 @@ import com.miniprojectteam8.ecommerce.ui.productDetail.ProductDetailFragment;
 
 public class WishlistCatalogFragment extends Fragment {
     private ProductViewModel wishlistViewModel;
-    private ProductCatalogAdapter wishlistCatalogAdapter;
+    private WishlistCatalogAdapter wishlistCatalogAdapter;
 
     public static WishlistCatalogFragment newInstance() {
         return new WishlistCatalogFragment();
@@ -34,6 +37,40 @@ public class WishlistCatalogFragment extends Fragment {
 
         getParentFragmentManager().beginTransaction().replace(R.id.container, productDetailFragment)
                 .commitNow();
+    };
+
+    private final RemoveWishlistClickableCallback removeWishlistClickableCallback = (view, product) -> {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setMessage("Do you want to remove from wishlist ?");
+        builder.setCancelable(true);
+        builder
+                .setPositiveButton(
+                        "Yes",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+                                wishlistViewModel.deleteProductFromWishlist(product);
+                                Toast.makeText(view.getContext(), "Removed from wishlist", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+        builder
+                .setNegativeButton(
+                        "No",
+                        new DialogInterface
+                                .OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     };
 
     @Override
@@ -52,7 +89,7 @@ public class WishlistCatalogFragment extends Fragment {
 
         //Initiate RecyclerView dan productCatalogAdapter
         RecyclerView wishlistRecyclerView = (RecyclerView) wishlistView.findViewById(R.id.wishlistCatalogRecyclerView);
-        wishlistCatalogAdapter = new ProductCatalogAdapter(wishlistClickableCallback);
+        wishlistCatalogAdapter = new WishlistCatalogAdapter(wishlistClickableCallback, removeWishlistClickableCallback);
 
         //Set product pada catalog ke semua product
         wishlistViewModel.setProductsInWishlist();
@@ -72,5 +109,39 @@ public class WishlistCatalogFragment extends Fragment {
                 wishlistCatalogAdapter.submitList(products);
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (getActivity() != null) {
+            SearchManager sm = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            SearchView sv = (SearchView) menu.findItem(R.id.search).getActionView();
+            sv.setSearchableInfo(sm.getSearchableInfo(getActivity().getComponentName()));
+            sv.setIconifiedByDefault(true);
+            sv.setMaxWidth(Integer.MAX_VALUE);
+            sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    wishlistViewModel.setProductsQueryTitleInWishlist(s);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (TextUtils.isEmpty(s)) {
+                        wishlistViewModel.setProductsInWishlist();
+                        return true;
+                    } else {
+                        wishlistViewModel.setProductsQueryTitleInWishlist(s);
+                        return false;
+                    }
+                }
+            });
+            sv.setOnCloseListener(() -> {
+                wishlistViewModel.setProductsInWishlist();
+                return false;
+            });
+        }
     }
 }

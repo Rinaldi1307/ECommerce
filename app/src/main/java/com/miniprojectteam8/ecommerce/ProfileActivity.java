@@ -17,7 +17,7 @@ public class ProfileActivity extends BaseActivity{
 
         profileText = findViewById(R.id.profileText);
         Data data = SessionManagerUtil.getInstance().getData(this);
-        profileText.setText("Hello " + data.getFullName() + " " + data.getEmail());
+        profileText.setText(data.getFullName() + " " + data.getEmail());
 
     }
 
